@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Portal – Login</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="login-wrap">
+    <aside class="login-side">
+      <div class="side-badge">Student Portal</div>
+      <h1>Attendance and marks, in one place</h1>
+      <p>Students can track progress instantly, while teachers keep class records up to date from one dashboard.</p>
+      <ul class="feature-list">
+        <li>View attendance in real time</li>
+        <li>Track subject performance</li>
+        <li>Manage class data from a clean dashboard</li>
+      </ul>
+    </aside>
+    <main class="login-main">
+      <div class="login-card">
+        <div class="card-header">
+          <span class="eyebrow">Welcome back</span>
+          <h2>Sign in</h2>
+        </div>
+        <div class="tabs" role="tablist">
+          <button type="button" id="tab-student" class="active" role="tab" aria-selected="true" aria-controls="login-form">Student</button>
+          <button type="button" id="tab-teacher" role="tab" aria-selected="false" tabindex="-1" aria-controls="login-form">Teacher</button>
+          <button type="button" id="tab-admin" role="tab" aria-selected="false" tabindex="-1" aria-controls="login-form">Admin</button>
+        </div>
+        <form id="login-form" role="tabpanel" aria-labelledby="tab-student">
+          <label for="uid" id="uid-label">SAP ID</label>
+          <input id="uid" name="id" type="text" inputmode="numeric" autocomplete="username" autocapitalize="off" spellcheck="false"
+                 pattern="[0-9]{11}" minlength="11" maxlength="11" aria-describedby="uid-hint"
+                 title="Enter exactly 11 digits" required>
+          <small id="uid-hint" class="field-hint">Enter your 11-digit SAP ID.</small>
+          <label for="pwd">Password</label>
+          <div class="password-field">
+            <input id="pwd" name="password" type="password" autocomplete="current-password" required>
+            <button class="password-toggle" type="button" data-toggle-password="pwd" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+          <button class="btn full" id="login-submit" type="submit">Sign in</button>
+          <div class="helper-row" id="recovery-row">
+            <button type="button" id="show-recovery" class="link-btn">Forgot password?</button>
+          </div>
+          <div id="msg" class="msg err" role="alert"></div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="recovery-dialog" aria-labelledby="recovery-title">
+    <div class="dialog-header">
+      <h3 id="recovery-title">Reset your password</h3>
+      <button type="button" class="icon-btn" id="close-recovery" aria-label="Close">×</button>
+    </div>
+    <div class="dialog-form">
+      <p class="note">We’ll send a one-time code to the mobile number registered to your account.</p>
+      <form id="recovery-request-form">
+        <label id="recovery-id-label" for="recovery-id">SAP ID</label>
+        <input id="recovery-id" type="text" inputmode="numeric" autocomplete="username"
+               pattern="[0-9]{11}" minlength="11" maxlength="11" required>
+        <button class="btn full" id="recovery-send" type="submit">Send verification code</button>
+      </form>
+      <form id="recovery-reset-form" hidden>
+        <label for="recovery-code">6-digit verification code</label>
+        <input id="recovery-code" type="text" inputmode="numeric" autocomplete="one-time-code"
+               pattern="[0-9]{6}" minlength="6" maxlength="6" required>
+        <label for="recovery-new-password">New password (8+ characters)</label>
+        <div class="password-field">
+          <input id="recovery-new-password" type="password" autocomplete="new-password" minlength="8" required>
+          <button class="password-toggle" type="button" data-toggle-password="recovery-new-password" aria-label="Show password" aria-pressed="false">Show</button>
+        </div>
+        <button class="btn full" id="recovery-reset" type="submit">Reset password</button>
+      </form>
+      <button class="link-btn recovery-resend" id="recovery-resend" type="button" hidden>Resend code</button>
+      <div id="recovery-msg" class="msg" role="status" aria-live="polite"></div>
+    </div>
+  </dialog>
+
+  <script src="/js/login.js"></script>
+</body>
+</html>

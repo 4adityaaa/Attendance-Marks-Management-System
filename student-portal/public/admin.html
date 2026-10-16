@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portal administration</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <strong>Student Portal — Administration</strong>
+    <div class="who">
+      <span id="who">Administrator</span>
+      <button class="btn ghost small" id="change-admin-password">Change password</button>
+      <button class="btn ghost small" onclick="logout()">Log out</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="admin-heading">
+      <div>
+        <span class="eyebrow">Portal overview</span>
+        <h1>People and classes</h1>
+        <p class="note">Manage teachers, review student records, and keep account access under control.</p>
+      </div>
+      <button class="btn" id="add-teacher">Create teacher</button>
+    </div>
+
+    <section class="summary-grid" id="admin-summary" aria-label="Portal account summary"></section>
+    <div class="admin-security-note">
+      Passwords are securely hashed and cannot be viewed. Use <b>Reset password</b> to set a new one.
+    </div>
+    <div class="toolbar">
+      <input id="admin-search" type="search" aria-label="Search teachers and students"
+             placeholder="Search teacher, student, phone, SAP ID or class">
+      <span id="admin-search-count" class="note" aria-live="polite"></span>
+    </div>
+    <section id="teacher-list" aria-label="Teachers and their students"></section>
+  </main>
+
+  <dialog id="teacher-dialog">
+    <div class="dialog-header">
+      <h2>Create teacher account</h2>
+      <button type="button" class="icon-btn" data-close-dialog="teacher-dialog" aria-label="Close">×</button>
+    </div>
+    <form id="teacher-form" class="dialog-form">
+      <p class="note">The mobile number becomes the Teacher ID. The teacher must verify it before SMS recovery is enabled.</p>
+      <label for="new-teacher-phone">Teacher mobile number / ID</label>
+      <input id="new-teacher-phone" name="teacher_uid" type="tel" inputmode="numeric"
+             pattern="[6-9][0-9]{9}" minlength="10" maxlength="10" autocomplete="tel-national" required>
+      <label for="new-teacher-name">Full name</label>
+      <input id="new-teacher-name" name="name" maxlength="120" required>
+      <label for="new-teacher-class">Class</label>
+      <input id="new-teacher-class" name="class_name" maxlength="120" required>
+      <label for="new-teacher-section">Section</label>
+      <input id="new-teacher-section" name="section" maxlength="40" required>
+      <label for="new-teacher-password">Initial password (8+ characters)</label>
+      <input id="new-teacher-password" name="password" type="password" minlength="8" maxlength="128"
+             autocomplete="new-password" required>
+      <button class="btn full" id="create-teacher-submit" type="submit">Create teacher</button>
+      <p id="teacher-form-msg" class="msg" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+
+  <dialog id="password-dialog">
+    <div class="dialog-header">
+      <h2>Reset account password</h2>
+      <button type="button" class="icon-btn" data-close-dialog="password-dialog" aria-label="Close">×</button>
+    </div>
+    <form id="password-form" class="dialog-form">
+      <p id="password-account-label" class="note"></p>
+      <p class="admin-security-note">The current password cannot be viewed. Set a new password and share it securely with the account holder.</p>
+      <label for="admin-new-password">New password (8+ characters)</label>
+      <input id="admin-new-password" type="password" minlength="8" maxlength="128"
+             autocomplete="new-password" required>
+      <button class="btn full" id="password-submit" type="submit">Set new password</button>
+      <p id="password-form-msg" class="msg" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+
+  <dialog id="admin-password-dialog">
+    <div class="dialog-header">
+      <h2>Change administrator password</h2>
+      <button type="button" class="icon-btn" data-close-dialog="admin-password-dialog" aria-label="Close">×</button>
+    </div>
+    <form id="admin-password-form" class="dialog-form">
+      <label for="admin-current-password">Current password</label>
+      <input id="admin-current-password" type="password" autocomplete="current-password" required>
+      <label for="admin-account-new-password">New password (12+ characters)</label>
+      <input id="admin-account-new-password" type="password" minlength="12" maxlength="128"
+             autocomplete="new-password" required>
+      <button class="btn full" id="admin-password-submit" type="submit">Change password</button>
+      <p id="admin-password-msg" class="msg" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

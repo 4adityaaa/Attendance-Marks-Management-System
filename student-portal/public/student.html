@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My attendance and marks</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <strong>Student Portal</strong>
+    <div class="who"><span id="who"></span>
+      <button class="btn ghost small" id="pwd-btn">Change password</button>
+      <button class="btn ghost small" onclick="logout()">Log out</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="profile" id="profile"></section>
+    <section class="phone-card" aria-labelledby="phone-heading">
+      <div>
+        <h2 id="phone-heading">Password recovery phone</h2>
+        <p class="note">Add your Indian mobile number to receive a one-time password reset code.</p>
+      </div>
+      <form id="phone-form" class="phone-form">
+        <label class="sr-only" for="student-phone">Mobile number</label>
+        <input id="student-phone" type="tel" inputmode="numeric" autocomplete="tel-national"
+               pattern="[6-9][0-9]{9}" minlength="10" maxlength="10"
+               placeholder="10-digit mobile number" aria-label="10-digit mobile number"
+               title="Enter a valid 10-digit Indian mobile number" required>
+        <button class="btn" id="phone-save" type="submit">Verify number</button>
+      </form>
+      <form id="phone-verify-form" class="phone-verify-form" hidden>
+        <label class="sr-only" for="student-phone-code">Mobile verification code</label>
+        <input id="student-phone-code" type="text" inputmode="numeric" autocomplete="one-time-code"
+               pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="6-digit code"
+               aria-label="6-digit mobile verification code" required>
+        <button class="btn" id="phone-verify" type="submit">Confirm number</button>
+      </form>
+      <p id="phone-msg" class="msg" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="attendance-alert" class="alert-card" role="alert" aria-live="polite" hidden></section>
+    <section class="summary-grid" id="student-summary" aria-label="Academic summary"></section>
+
+    <h2 class="section-heading">Your progress</h2>
+    <section class="chart-grid" aria-label="Attendance and marks charts">
+      <article class="chart-card">
+        <h3>Attendance by subject</h3>
+        <p>Attendance below 80% needs attention.</p>
+        <div id="attendance-chart" class="chart-list"></div>
+      </article>
+      <article class="chart-card">
+        <h3>Marks by subject</h3>
+        <p>Marks are shown as a percentage of the maximum.</p>
+        <div id="marks-chart" class="chart-list"></div>
+      </article>
+      <article class="chart-card">
+        <h3>Overall attendance</h3>
+        <p>Share of classes attended across all subjects.</p>
+        <div class="donut-layout">
+          <div id="attendance-pie" class="donut" role="img" aria-label="Attendance chart"></div>
+          <ul id="attendance-legend" class="legend"></ul>
+        </div>
+      </article>
+    </section>
+
+    <h2 class="section-heading">Subject details</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Subject</th><th>Attended / Total</th><th>Attendance</th><th></th><th>Marks</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note">Attendance under 80% is highlighted. Contact your teacher if a record needs correcting.</p>
+  </main>
+
+  <dialog id="pwd-dialog">
+    <h3>Change password</h3>
+    <label for="old-pwd">Old password</label>
+    <input id="old-pwd" type="password">
+    <label for="new-pwd">New password (6+ characters)</label>
+    <input id="new-pwd" type="password">
+    <div id="pwd-msg" class="msg"></div>
+    <div class="row-actions">
+      <button class="btn" id="pwd-save">Save</button>
+      <button class="btn ghost" id="pwd-close">Close</button>
+    </div>
+  </dialog>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/student.js"></script>
+</body>
+</html>

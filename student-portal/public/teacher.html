@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Class teacher panel</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <strong>Student Portal – Class teacher</strong>
+    <div class="who"><span id="who"></span>
+      <button class="btn ghost small" id="phone-btn">Update phone / ID</button>
+      <button class="btn ghost small" onclick="logout()">Log out</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <h2 id="class-title">Your class</h2>
+    <section class="summary-grid" id="class-summary" aria-label="Class summary"></section>
+    <section id="class-alert" class="alert-card" role="status" aria-live="polite" hidden></section>
+    <section class="chart-grid" aria-label="Class performance charts">
+      <article class="chart-card">
+        <h3>Attendance by subject</h3>
+        <p>Class attendance averages. Subjects under 80% are highlighted.</p>
+        <div id="class-attendance-chart" class="chart-list"></div>
+      </article>
+      <article class="chart-card">
+        <h3>Average marks by subject</h3>
+        <p>Average marks shown as a percentage of the maximum.</p>
+        <div id="class-marks-chart" class="chart-list"></div>
+      </article>
+      <article class="chart-card">
+        <h3>Subject attendance overview</h3>
+        <p>Share of student-subject records below the 80% target.</p>
+        <div class="donut-layout">
+          <div id="class-attendance-pie" class="donut" role="img" aria-label="Class attendance chart"></div>
+          <ul id="class-attendance-legend" class="legend"></ul>
+        </div>
+      </article>
+    </section>
+
+    <div class="toolbar">
+      <input id="search" type="search" aria-label="Search students" placeholder="Search name, roll no, SAP ID or subject">
+      <span id="search-count" class="note" aria-live="polite"></span>
+      <span class="spacer"></span>
+      <button class="btn" id="add-btn">Add student</button>
+    </div>
+    <div id="list"></div>
+  </main>
+
+  <dialog id="add-dialog">
+    <h3>Add student</h3>
+    <p class="note">Their first password is their SAP ID.</p>
+    <div id="add-fields"></div>
+    <div id="add-msg" class="msg err"></div>
+    <div class="row-actions">
+      <button class="btn" id="add-save">Add student</button>
+      <button class="btn ghost" id="add-close">Cancel</button>
+    </div>
+  </dialog>
+
+  <dialog id="phone-dialog">
+    <div class="dialog-header">
+      <h3>Update phone and Teacher ID</h3>
+      <button type="button" class="icon-btn" id="phone-close" aria-label="Close">×</button>
+    </div>
+    <form id="phone-form" class="dialog-form">
+      <p class="note">Your 10-digit mobile number becomes your Teacher ID and is used for password recovery.</p>
+      <label for="teacher-phone">10-digit mobile number</label>
+      <input id="teacher-phone" type="tel" inputmode="numeric" autocomplete="tel-national"
+             pattern="[6-9][0-9]{9}" minlength="10" maxlength="10"
+             title="Enter a valid 10-digit Indian mobile number" required>
+      <label for="teacher-phone-password">Current password</label>
+      <input id="teacher-phone-password" type="password" autocomplete="current-password" required>
+      <div id="phone-msg" class="msg" role="status" aria-live="polite"></div>
+      <div class="row-actions">
+        <button class="btn" id="phone-save" type="submit">Update number</button>
+        <button class="btn ghost" id="phone-cancel" type="button">Cancel</button>
+      </div>
+    </form>
+    <form id="phone-verify-form" class="dialog-form phone-verify-form" hidden>
+      <p class="note">Enter the verification code sent to the new number. The number becomes your Teacher ID after verification.</p>
+      <label for="teacher-phone-code">6-digit verification code</label>
+      <input id="teacher-phone-code" type="text" inputmode="numeric" autocomplete="one-time-code"
+             pattern="[0-9]{6}" minlength="6" maxlength="6" required>
+      <div id="phone-verify-msg" class="msg" role="status" aria-live="polite"></div>
+      <button class="btn" id="phone-verify" type="submit">Confirm number</button>
+    </form>
+  </dialog>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/teacher.js"></script>
+</body>
+</html>

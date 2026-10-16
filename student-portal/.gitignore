@@ -1,0 +1,4 @@
+node_modules/
+college.db*
+public/uploads/*
+!public/uploads/.gitkeep
