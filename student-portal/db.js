@@ -52,6 +52,8 @@ CREATE TABLE IF NOT EXISTS subject_records (
   UNIQUE (student_id, subject)
 );
 
+CREATE INDEX IF NOT EXISTS students_teacher_roll_idx ON students (teacher_id, roll_no, id);
+
 CREATE TABLE IF NOT EXISTS password_reset_otps (
   role         TEXT NOT NULL CHECK (role IN ('teacher', 'student')),
   account_id   INTEGER NOT NULL,

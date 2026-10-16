@@ -17,6 +17,7 @@ function setRole(r) {
   const idPattern = idLength ? `[0-9]{${idLength}}` : '[A-Za-z0-9._\\-]{3,40}';
   if (idInput.value && !new RegExp(`^${idPattern}$`).test(idInput.value))
     idInput.value = '';
+  idInput.minLength = 0;
   idInput.maxLength = idLength || 40;
   idInput.minLength = idLength || 3;
   idInput.pattern = idPattern;
@@ -121,7 +122,9 @@ $('uid').addEventListener('keydown', (event) => {
 $('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   $('msg').textContent = '';
-  $('login-submit').disabled = true;
+  const submitButton = $('login-submit');
+  submitButton.disabled = true;
+  submitButton.textContent = 'Signing in...';
   try {
     const res = await fetch('/api/login', {
       method: 'POST',
@@ -137,7 +140,8 @@ $('login-form').addEventListener('submit', async (e) => {
   } catch (err) {
     $('msg').textContent = err.message;
   } finally {
-    $('login-submit').disabled = false;
+    submitButton.disabled = false;
+    submitButton.textContent = 'Sign in';
   }
 });
 

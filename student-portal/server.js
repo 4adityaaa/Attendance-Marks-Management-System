@@ -177,7 +177,7 @@ function auth(role) {
 }
 
 // ---------- login ----------
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { role, id, password } = req.body || {};
   if (!['teacher', 'student', 'admin'].includes(role))
     return res.status(400).json({ error: 'Choose student, teacher or administrator sign in' });
@@ -201,7 +201,7 @@ app.post('/api/login', (req, res) => {
       ? db.prepare('SELECT * FROM teachers WHERE teacher_uid = ?').get(cleanId)
       : db.prepare('SELECT * FROM students WHERE sap_id = ?').get(cleanId);
 
-  if (!row || !bcrypt.compareSync(String(password), row.password))
+  if (!row || !await bcrypt.compare(password, row.password))
     return res.status(401).json({ error: 'ID or password is wrong' });
 
   const token = jwt.sign({ role, uid: row.id, version: row.auth_version }, SECRET, { expiresIn: '8h' });
@@ -290,28 +290,64 @@ function studentWithRecords(studentId) {
 const adminOnly = auth('admin');
 
 app.get('/api/admin/overview', adminOnly, (req, res) => {
-  const teachers = db.prepare(`SELECT id, teacher_uid, name, class_name, section, phone_verified
-    FROM teachers ORDER BY name`).all();
-  const studentsForTeacher = db.prepare('SELECT id FROM students WHERE teacher_id = ? ORDER BY roll_no');
-  res.json(teachers.map((teacher) => ({
-    ...teacher,
-    students: studentsForTeacher.all(teacher.id).map(({ id }) => {
-      const student = studentWithRecords(id);
-      return {
-        id: student.id,
-        sap_id: student.sap_id,
-        roll_no: student.roll_no,
-        name: student.name,
-        photo: student.photo,
-        current_year: student.current_year,
-        class_name: student.class_name,
-        section: student.section,
-        phone_number: student.phone_verified ? student.phone_number : '',
-        phone_verified: student.phone_verified,
-        records: student.records,
+  const rows = db.prepare(`SELECT
+      t.id AS teacher_id, t.teacher_uid, t.name AS teacher_name, t.class_name AS teacher_class,
+      t.section AS teacher_section, t.phone_verified AS teacher_phone_verified,
+      s.id AS student_id, s.sap_id, s.roll_no, s.name AS student_name, s.photo,
+      s.current_year, s.class_name AS student_class, s.section AS student_section,
+      s.phone_number, s.phone_verified AS student_phone_verified,
+      r.id AS record_id, r.subject, r.total_classes, r.attended, r.marks, r.max_marks
+    FROM teachers t
+    LEFT JOIN students s ON s.teacher_id = t.id
+    LEFT JOIN subject_records r ON r.student_id = s.id
+    ORDER BY t.name, s.roll_no, s.id, r.subject`).all();
+
+  const teachers = new Map();
+  for (const row of rows) {
+    let teacher = teachers.get(row.teacher_id);
+    if (!teacher) {
+      teacher = {
+        id: row.teacher_id,
+        teacher_uid: row.teacher_uid,
+        name: row.teacher_name,
+        class_name: row.teacher_class,
+        section: row.teacher_section,
+        phone_verified: row.teacher_phone_verified,
+        students: [],
       };
-    }),
-  })));
+      teachers.set(row.teacher_id, teacher);
+    }
+
+    if (row.student_id == null) continue;
+    let student = teacher.students[teacher.students.length - 1];
+    if (!student || student.id !== row.student_id) {
+      student = {
+        id: row.student_id,
+        sap_id: row.sap_id,
+        roll_no: row.roll_no,
+        name: row.student_name,
+        photo: row.photo,
+        current_year: row.current_year,
+        class_name: row.student_class,
+        section: row.student_section,
+        phone_number: row.student_phone_verified ? row.phone_number : '',
+        phone_verified: row.student_phone_verified,
+        records: [],
+      };
+      teacher.students.push(student);
+    }
+    if (row.record_id != null) {
+      student.records.push({
+        id: row.record_id,
+        subject: row.subject,
+        total_classes: row.total_classes,
+        attended: row.attended,
+        marks: row.marks,
+        max_marks: row.max_marks,
+      });
+    }
+  }
+  res.json([...teachers.values()]);
 });
 
 app.post('/api/admin/teachers', adminOnly, (req, res) => {
