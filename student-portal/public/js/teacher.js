@@ -201,7 +201,10 @@ $('add-btn').onclick = () => {
     const id = `new-${k}`;
     const hint = k === 'sap_id' ? '<small class="field-hint">Use exactly 11 digits.</small>' : '';
     return `<label for="${id}">${label}</label><input id="${id}" data-new="${k}" ${fieldAttributes(k)} required value="${esc(preset)}">${hint}`;
-  }).join('');
+  }).join('') + `
+    <label for="new-password">Initial password (8+ characters)</label>
+    <input id="new-password" data-new="password" type="password" minlength="8" maxlength="128"
+           autocomplete="new-password" required>`;
   $('add-msg').textContent = '';
   dlg.showModal();
 };

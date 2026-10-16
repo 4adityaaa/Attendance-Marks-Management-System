@@ -573,17 +573,19 @@ app.get('/api/teacher/students', teacherOnly, (req, res) => {
 });
 
 app.post('/api/teacher/students', teacherOnly, (req, res) => {
-  const { sap_id, roll_no, name, current_year, class_name, section } = req.body || {};
+  const { sap_id, roll_no, name, current_year, class_name, section, password } = req.body || {};
   const cleanSapId = typeof sap_id === 'string' ? sap_id.trim() : '';
-  if (![cleanSapId, roll_no, name, current_year, class_name, section].every(Boolean))
+  if (![cleanSapId, roll_no, name, current_year, class_name, section, password].every(Boolean))
     return res.status(400).json({ error: 'Fill all the fields' });
   if (!/^\d{11}$/.test(cleanSapId))
     return res.status(400).json({ error: 'SAP ID must be exactly 11 digits' });
+  if (typeof password !== 'string' || password.length < 8 || password.length > 128)
+    return res.status(400).json({ error: 'Initial password must be 8–128 characters' });
   try {
     const r = db.prepare(`INSERT INTO students
       (sap_id, roll_no, name, password, current_year, class_name, section, teacher_id)
       VALUES (?,?,?,?,?,?,?,?)`)
-      .run(cleanSapId, roll_no, name, bcrypt.hashSync(cleanSapId, 10), current_year, class_name, section, req.user.uid);
+      .run(cleanSapId, roll_no, name, bcrypt.hashSync(password, 10), current_year, class_name, section, req.user.uid);
     res.json({ id: r.lastInsertRowid });
   } catch (e) {
     res.status(400).json({ error: 'This SAP ID already exists' });

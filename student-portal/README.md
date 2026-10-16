@@ -17,6 +17,7 @@ HTML + CSS + JavaScript frontend, Node.js + Express backend, SQLite database.
 - Administrator: provision the first admin with `PORTAL_ADMIN_USERNAME` and `PORTAL_ADMIN_PASSWORD` before starting the server. Use the **Admin** sign-in tab.
 - Admin credentials must use a 3–40 character username and a password with at least 12 characters. Keep these environment variables private. The first admin creates teacher accounts from the admin dashboard; teacher accounts are not open for public self-registration.
 - Admins can view teacher/student account details, delete accounts, and set a new password. Passwords are hashed and cannot be viewed.
+- When a teacher creates a student, they must set an initial password of 8–128 characters. The student signs in with that password and their 11-digit SAP ID. The seeded demo student's initial password remains their SAP ID.
 - The admin role is the portal-wide supervisor; teachers manage only their own class, and students can view only their own profile and academic records. Password changes invalidate the affected account's existing sessions.
 - Teacher IDs must contain exactly 10 digits; student SAP IDs must contain exactly 11 digits.
 - Existing demo teacher IDs `T1001` and `T2001` are migrated to `1000001001` and `1000002001` on startup.
